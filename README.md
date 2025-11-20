@@ -13,9 +13,9 @@ This repository is the official implementation of "DiffuseMorph: Unsupervised De
 
 ## Data
 In our experiments, we used the following datasets:
-* 2D facial expression images: [RaFD dataset](https://rafd.socsci.ru.nl/RaFD2/RaFD?p=main)
-* 3D cardiac MR images: [ACDC dataset](https://acdc.creatis.insa-lyon.fr/description/databases.html)
 * 3D brain MR images: [OASIS-3 dataset](https://www.oasis-brains.org/)
+* MNIST: [Downloaded from MLIA class final project materials]
+* Google Draw: [Downloaded from MLIA class final project materials]
 
 ## Training
 
