@@ -1,1 +1,1 @@
-Download the MNIST and Google Draw datasets from MLIA final project materials, and request OASIS-3 for brain MR dataset
+Request OASIS-3 for brain MR dataset, while other datasets are available here
