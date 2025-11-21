@@ -15,8 +15,8 @@
     "datasets": {
         "centered": true,
         "test": {
-            "name": "Face",
-            "dataroot": "./toy_sample/",
+            "name": "BrainMR",
+            "dataroot": "./datasets/brainMR/",
             "data_len": 3
         }
     },
@@ -61,7 +61,7 @@
             }
         },
         "diffusion": {
-            "image_size": 128,
+            "image_size": 112,
             "channels": 3,
             "conditional": true
         },

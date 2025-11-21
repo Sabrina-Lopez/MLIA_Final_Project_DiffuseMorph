@@ -15,8 +15,8 @@
     "datasets": {
         "centered": true,
         "train": {
-            "name": "Face",
-            "dataroot": "./toy_sample/",
+            "name": "BrainMR",
+            "dataroot": "./datasets/brainMR/",
             "batch_size": 1,
             "num_workers": 8,
             "use_shuffle": true
@@ -63,7 +63,7 @@
             }
         },
         "diffusion": {
-            "image_size": 128,
+            "image_size": 112,
             "channels": 3,
             "conditional": true
         },
