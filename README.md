@@ -13,7 +13,7 @@ This repository is the official implementation of "DiffuseMorph: Unsupervised De
 
 ## Data
 In our experiments, we used the following datasets:
-* 3D brain MR images: [OASIS-3 dataset](https://www.oasis-brains.org/)
+* brain MR: [Downloaded from MLIA class final project materials]
 * MNIST: [Downloaded from MLIA class final project materials]
 * Google Draw: [Downloaded from MLIA class final project materials]
 

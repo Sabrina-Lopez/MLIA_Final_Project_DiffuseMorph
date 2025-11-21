@@ -49,6 +49,12 @@
                 "linear_start": 1e-6,
                 "linear_end": 1e-2
             },
+            "val": {
+                "schedule": "linear",
+                "n_timestep": 2000,
+                "linear_start": 1e-6,
+                "linear_end": 1e-2
+            },
             "test": {
                 "schedule": "linear",
                 "n_timestep": 2000,

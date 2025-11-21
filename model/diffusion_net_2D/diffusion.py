@@ -239,6 +239,8 @@ class GaussianDiffusion(nn.Module):
         b, c, h, w = x_m.shape
         cont_deform = x_m
         cont_field = torch.zeros((b, 2, h, w), device=self.betas.device)
+        deform = x_m  # Initialize deform
+        flow = torch.zeros((b, 2, h, w), device=self.betas.device)  # Initialize flow
         with torch.no_grad():
             t = torch.full((x_in.shape[0],), 0, device=self.betas.device, dtype=torch.long)
             score = self.denoise_fn(torch.cat([x_in, x_f], dim=1), t)
