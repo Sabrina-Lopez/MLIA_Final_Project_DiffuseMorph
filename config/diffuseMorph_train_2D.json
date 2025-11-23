@@ -15,8 +15,8 @@
     "datasets": {
         "centered": true,
         "train": {
-            "name": "BrainMR",
-            "dataroot": "./datasets/brainMR/",
+            "name": "Face",
+            "dataroot": "./toy_sample/",
             "batch_size": 1,
             "num_workers": 8,
             "use_shuffle": true
@@ -49,12 +49,6 @@
                 "linear_start": 1e-6,
                 "linear_end": 1e-2
             },
-            "val": {
-                "schedule": "linear",
-                "n_timestep": 2000,
-                "linear_start": 1e-6,
-                "linear_end": 1e-2
-            },
             "test": {
                 "schedule": "linear",
                 "n_timestep": 2000,
@@ -63,7 +57,7 @@
             }
         },
         "diffusion": {
-            "image_size": 112,
+            "image_size": 128,
             "channels": 3,
             "conditional": true
         },

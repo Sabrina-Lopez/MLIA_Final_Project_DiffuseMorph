@@ -3,34 +3,42 @@ import data.util_2D as Util
 import os
 import numpy as np
 from skimage import io
+import random
 
 
 class GoogleDrawDataset(Dataset):
 	def __init__(self, dataroot, split='test'):
 		self.split = split
 		self.dataroot = dataroot
-		self.pairs = []
+		self.all_images = []
+		self.images_by_class = {}
 
-		# Categories assumed as subdirectories
+		# Walk the directory and populate all_images and images_by_class
 		categories = [c for c in sorted(os.listdir(dataroot)) if os.path.isdir(os.path.join(dataroot, c))]
-		all_images_paths = []
-		for c in categories:
-			cat_path = os.path.join(dataroot, c)
+		for category in categories:
+			cat_path = os.path.join(dataroot, category)
+			self.images_by_class[category] = []
 			for root, _, files in os.walk(cat_path):
 				for f in files:
 					if f.lower().endswith('.png'):
-						all_images_paths.append(os.path.join(root, f))
+						path = os.path.join(root, f)
+						self.all_images.append((path, category))
+						self.images_by_class[category].append(path)
 
-		# Find max dimensions and calculate target size
+		"""
+		print(f"Total images found: {len(self.all_images)}")
+		print(f"All images: {self.all_images}")
+		print(f"Image classes: {self.images_by_class}")
+		"""
+		
+		# Scan all images to find max dimensions for padding
 		max_h, max_w = 0, 0
 		print("Scanning GoogleDraw dataset to determine optimal dimensions")
-		for path in all_images_paths:
+		for path, _ in self.all_images:
 			try:
 				h, w = io.imread(path, as_gray=True).shape
-				if h > max_h:
-					max_h = h
-				if w > max_w:
-					max_w = w
+				if h > max_h: max_h = h
+				if w > max_w: max_w = w
 			except Exception as e:
 				print(f"Warning: Could not read {path}. Skipping. Error: {e}")
 		
@@ -40,11 +48,7 @@ class GoogleDrawDataset(Dataset):
 		
 		print(f"GoogleDraw Dataset: Max dims found ({max_h}, {max_w}). Target size set to ({self.target_height}, {self.target_width}).")
 
-		# Build consecutive pairs
-		for i in range(0, len(all_images_paths) - 1, 2):
-			self.pairs.append([all_images_paths[i], all_images_paths[i + 1]])
-
-		self.data_len = len(self.pairs)
+		self.data_len = len(self.all_images)
 
 	def __len__(self):
 		return self.data_len
@@ -60,9 +64,22 @@ class GoogleDrawDataset(Dataset):
 		return np.pad(arr, ((pt, pb), (pl, pr)), mode='constant', constant_values=0)
 
 	def __getitem__(self, index):
-		dataX_path, dataY_path = self.pairs[index]
-		imgX = io.imread(dataX_path, as_gray=True).astype(np.float32)
-		imgY = io.imread(dataY_path, as_gray=True).astype(np.float32)
+		# Get the moving image based on the global index
+		moving_path, moving_class = self.all_images[index]
+
+		# Get the list of candidates for the fixed image (same class)
+		candidate_paths = self.images_by_class[moving_class]
+		
+		# Select a random fixed image from the same class
+		fixed_path = random.choice(candidate_paths)
+		
+		# To be safe, ensure we don't pair an image with itself
+		if moving_path == fixed_path and len(candidate_paths) > 1:
+			while moving_path == fixed_path:
+				fixed_path = random.choice(candidate_paths)
+
+		imgX = io.imread(moving_path, as_gray=True).astype(np.float32)
+		imgY = io.imread(fixed_path, as_gray=True).astype(np.float32)
 
 		# Normalize to [0, 1] range
 		if imgX.max() > 0:
@@ -84,7 +101,6 @@ class GoogleDrawDataset(Dataset):
 
 		imgX, imgY = Util.transform_augment([imgX, imgY], split=self.split, min_max=(-1, 1))
 
-		fileInfo = [os.path.basename(dataX_path), os.path.basename(dataY_path)]
+		fileInfo = [os.path.basename(moving_path), os.path.basename(fixed_path)]
 		
 		return {'M': imgX, 'F': imgY, 'MC': imgX_rgb, 'FC': imgY_rgb, 'nS': 7, 'P':fileInfo, 'Index': index}
-

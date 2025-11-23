@@ -10,10 +10,50 @@ import time
 from util.visualizer import Visualizer
 from PIL import Image
 import numpy as np
+from skimage.metrics import structural_similarity as ssim
 
 def save_image(image_numpy, image_path):
     image_pil = Image.fromarray(image_numpy.astype('uint8'))
     image_pil.save(image_path)
+
+def calculate_jacobian_metrics(flow):
+    """
+    Calculates the percentage of non-positive Jacobian determinants for a 2D flow field.
+    Args:
+        flow (np.array): A numpy array of shape (2, H, W) representing the displacement field.
+    Returns:
+        float: The percentage of non-positive Jacobian determinants.
+    """
+    # Get displacement fields
+    u = flow[0, :, :]
+    v = flow[1, :, :]
+
+    # Compute partial derivatives using central differences
+    dx = np.gradient(u, axis=1)
+    dy = np.gradient(v, axis=0)
+
+    # Jacobian of the transformation T(p) = p + u(p) is J = I + J_u
+    # J_T = [[1 + du/dx, du/dy], [dv/dx, 1 + dv/dy]]
+    # For 2D, we can simplify the gradient calculation.
+    # Let's use np.gradient which returns a list of arrays.
+    grad_u = np.gradient(u) # [du/dy, du/dx]
+    grad_v = np.gradient(v) # [dv/dy, dv/dx]
+
+    du_dx = grad_u[1]
+    du_dy = grad_u[0]
+    dv_dx = grad_v[1]
+    dv_dy = grad_v[0]
+
+    # Determinant of the Jacobian of the transformation
+    # det(J) = (1 + du/dx) * (1 + dv/dy) - (du/dy * dv/dx)
+    jacobian_det = (1 + du_dx) * (1 + dv_dy) - (du_dy * dv_dx)
+
+    # Calculate the percentage of non-positive determinants
+    non_positive_count = np.sum(jacobian_det <= 0)
+    total_pixels = jacobian_det.size
+    percentage = (non_positive_count / total_pixels) * 100
+    
+    return percentage
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -100,12 +140,18 @@ if __name__ == "__main__":
                 logger.info('Saving models and training states.')
                 diffusion.save_network(current_epoch, current_step)
 
-        # save model
+        # Save model
         logger.info('End of training.')
     else:
         from model.deformation_net_2D import Dense2DSpatialTransformer
         stn = Dense2DSpatialTransformer()
         registTime = []
+        
+        # Lists to store metrics for final statistics
+        nmse_scores = []
+        ssim_scores = []
+        jacobian_scores = []
+
         logger.info('Begin Model Evaluation.')
         idx = 0
         result_path = '{}'.format(opt['path']['results'])
@@ -169,7 +215,43 @@ if __name__ == "__main__":
                 savePath = os.path.join(result_path, 'RGB_%s_TO_%s_regist_%.2f.png' % (dataXinfo, dataYinfo, (isamp+1)/nsamp))
                 save_image(regist_dataRGB, savePath)
 
+            # Metric calculations
+            
+            # NMSE (multiplied by 10^-1 as per the paper)
             numer = np.sum((data_fixedRGB - regist_dataRGB) ** 2)
             denom = np.sum((data_fixedRGB) ** 2 )
-            nmse = numer / denom
-            print('NMSE_%s_TO_%s: %.4f' % (dataXinfo, dataYinfo, nmse))
+            nmse = (numer / denom) * 1e-1 # Multiply by 10^-1
+            nmse_scores.append(nmse)
+            print('NMSE_%s_TO_%s: %.4f (x10^-1)' % (dataXinfo, dataYinfo, nmse))
+
+            # SSIM
+            ssim_score = ssim(data_fixedRGB, regist_dataRGB, data_range=255, multichannel=True, channel_axis=2)
+            ssim_scores.append(ssim_score)
+            print('SSIM_%s_TO_%s: %.4f' % (dataXinfo, dataYinfo, ssim_score))
+
+            # Jacobian
+            final_flow = visuals['flow'].squeeze().cpu().numpy()
+            jacobian_percentage = calculate_jacobian_metrics(final_flow)
+            jacobian_scores.append(jacobian_percentage)
+            print('Jacobian_Non-positive_%s_TO_%s: %.4f%%' % (dataXinfo, dataYinfo, jacobian_percentage))
+
+        # Final statistics
+        print("\n" + "="*30)
+        print("      Overall Test Statistics")
+        print("="*30)
+        
+        # NMSE Stats
+        mean_nmse = np.mean(nmse_scores)
+        std_nmse = np.std(nmse_scores)
+        print(f"NMSE (x10^-1): Mean = {mean_nmse:.4f}, Std = {std_nmse:.4f}")
+
+        # SSIM Stats
+        mean_ssim = np.mean(ssim_scores)
+        std_ssim = np.std(ssim_scores)
+        print(f"SSIM:           Mean = {mean_ssim:.4f}, Std = {std_ssim:.4f}")
+
+        # Jacobian Stats
+        mean_jacobian = np.mean(jacobian_scores)
+        std_jacobian = np.std(jacobian_scores)
+        print(f"Jacobian (%):   Mean = {mean_jacobian:.4f}, Std = {std_jacobian:.4f}")
+        print("="*30)
