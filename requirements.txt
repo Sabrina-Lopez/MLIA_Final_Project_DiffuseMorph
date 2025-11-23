@@ -1,0 +1,10 @@
+torch
+torchvision
+matplotlib
+scipy
+pillow
+numpy
+regex
+dominate
+visdom
+scikit-image
