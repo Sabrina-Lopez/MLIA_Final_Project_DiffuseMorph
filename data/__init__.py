@@ -22,9 +22,9 @@ def create_dataloader(dataset, dataset_opt, phase):
 def create_dataset_2D(dataset_opt, phase):
     '''create dataset'''
     # from data.RAFD_dataset import RAFDDataset as D
-    # from data.brainMR_dataset import brainMRDataset as D # image_size = 112, data_len for test = 293
+    from data.brainMR_dataset import brainMRDataset as D # image_size = 112, data_len for test = 293
     # from data.MNIST_dataset import MNISTDataset as D # image_size = 64
-    from data.GoogleDraw_dataset import GoogleDrawDataset as D # image_size = 64, data_len for test = 100
+    # from data.GoogleDraw_dataset import GoogleDrawDataset as D # image_size = 64, data_len for test = 100
     dataset = D(dataroot=dataset_opt['dataroot'],
                 split=phase
                 )
