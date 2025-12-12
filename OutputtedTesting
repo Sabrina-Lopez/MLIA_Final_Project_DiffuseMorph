@@ -1,0 +1,21 @@
+These are the results outputted when testing the pre-trained models.
+
+brainMR
+
+==============================
+      Overall Test Statistics
+==============================
+NMSE (x10^-1): Mean = 0.0034, Std = 0.0009
+SSIM:           Mean = 0.8821, Std = 0.0148
+Jacobian (%):   Mean = 0.2893, Std = 0.1832
+==============================
+
+mnist
+
+==============================
+      Overall Test Statistics
+==============================
+NMSE (x10^-1): Mean = 0.0352, Std = 0.0314
+SSIM:           Mean = 0.7050, Std = 0.1484
+Jacobian (%):   Mean = 0.2668, Std = 0.5081
+==============================
