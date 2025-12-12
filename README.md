@@ -28,14 +28,14 @@ Before testing, ensure that the path for the 'resume_state' variable of the test
 To train our model for 2D image registration on Brain MR dataset, runthis command:
 
 ```train
-python3 main_2D.py -p train -c config/diffuseMorph_train_2D_brainMR.json
+python main_2D.py -p train -c config/diffuseMorph_train_2D_brainMR.json
 ```
 The key hyperparameters that were tuned the following: dropout, linear_start, linear_end, n_epoch, lambda loss, val_freq, and lr.
 
 To train our model for 2D image registration on MNIST dataset, run this command:
 
 ```train
-python3 main_2D.py -p train -c config/diffuseMorph_train_2D_mnist.json
+python main_2D.py -p train -c config/diffuseMorph_train_2D_mnist.json
 ```
 
 ## Test
