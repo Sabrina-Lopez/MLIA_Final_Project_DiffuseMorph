@@ -33,9 +33,6 @@ cloudpickle
 collection==0.1.6
 colorama
 comm==0.2.3
-conda-libmamba-solver
-conda-package-handling
-conda_package_streaming
 contourpy
 crc32c==2.7.1
 cryptography
