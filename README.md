@@ -1,7 +1,7 @@
 <img src="./img/representative.png">
 
 # DiffuseMorph
-
+PROJECT
 This repository is for the implementation of "DiffuseMorph: Unsupervised Deformable Image Registration Using Diffusion Model" for Machine Learning in Image Analysis of Fall 2025.
 
 [[Original Paper](https://arxiv.org/abs/2112.05149)]
@@ -90,4 +90,5 @@ The images with the sub-string "sample" are representations of the continuous ge
   organization={Springer}
 }
 ```
+
 
