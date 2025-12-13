@@ -63,6 +63,18 @@ Access the Google Drive link and download the experiments zip folder and place i
 ./experiments/DiffuseMorph_2D_251211_201945
 ```
 
+As a side note, you can use below command to download the experiments.zip file from the drive link:
+```
+curl -L -o experiments.zip \
+"https://drive.usercontent.google.com/download?id=1xtqshoA1g9t7HqySHj9RAc_uPy4OF1E2&export=download&authuser=0&confirm=t"
+
+```
+
+and you can unzip this file inside the experiments folder using the command:
+```
+unzip experiments.zip
+```
+
 ## Viewing Image Output Results
 
 To view the image outputs of the training, go to your pre-trained model folder and then
@@ -89,6 +101,7 @@ The images with the sub-string "sample" are representations of the continuous ge
   organization={Springer}
 }
 ```
+
 
 
 
