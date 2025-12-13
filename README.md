@@ -19,7 +19,7 @@ In our experiments, we used the following datasets:
 
 ## Training or Testing Preparation
 
-Before running training or testing, check the data/__init__.py and ensure that the correct dataset class is being imported for the 'create_dataset_2D' function. If you want to train or test with the Brain MR dataset, uncomment 'from data.brainMR_dataset import brainMRDataset as D' and comment the other dataset class imports. Complete the same process for the Google Draw and MNIST datasets.
+Before running training or testing, check the data/\_\_init\_\_.py and ensure that the correct dataset class is being imported for the 'create_dataset_2D' function. If you want to train or test with the Brain MR dataset, uncomment 'from data.brainMR_dataset import brainMRDataset as D' and comment the other dataset class imports. Complete the same process for the Google Draw and MNIST datasets.
 
 Before testing, ensure that the path for the 'resume_state' variable of the testing configuration file has the correct file path to your pre-trained model with the same format for the checkpoint reference. For the project, the testing configuration files for the Brain MR and Google Draw datasets should be already correctly configured.
 
@@ -90,3 +90,4 @@ The images with the sub-string "sample" are representations of the continuous ge
   organization={Springer}
 }
 ```
+
