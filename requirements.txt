@@ -48,7 +48,6 @@ deprecation==2.1.0
 dill==0.3.8
 distro
 dm-tree==0.1.8
-dmvr
 docker-pycreds==0.4.0
 docstring_parser==0.16
 dominate==2.9.1
