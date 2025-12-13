@@ -116,9 +116,7 @@ kiwisolver
 lammps
 lazy_loader
 libclang==18.1.1
-libmambapy
 locket
-mamba
 Markdown==3.7
 markdown-it-py==3.0.0
 MarkupSafe==3.0.2
