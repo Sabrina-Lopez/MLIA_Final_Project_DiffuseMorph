@@ -52,7 +52,7 @@ deprecation==2.1.0
 dill==0.3.8
 distro
 dm-tree==0.1.8
-dmvr @ git+https://github.com/deepmind/dmvr.git@77ccedaa084d29239eaeafddb0b2e83843b613a1
+dmvr
 docker-pycreds==0.4.0
 docstring_parser==0.16
 dominate==2.9.1
